@@ -3,15 +3,20 @@ package http
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"go-wsbackend/pkg/common"
 	"time"
 )
 
-var cf *common.Config
+var (
+	cf *common.Config
+	db *gorm.DB
+)
 
 
-func Init(c *common.Config) *gin.Engine{
+func Init(c *common.Config) *gin.Engine {
 	cf = c
+	db = cf.DB
 	r := gin.New()
 	r.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
@@ -27,7 +32,17 @@ func Init(c *common.Config) *gin.Engine{
 		)
 	}))
 	r.Use(gin.Recovery())
-	r.GET("/v1/ws", getAllWaste)
+
+	// 提供小程序端访问接口
+	v1 := r.Group("/v1")
+	{
+		v1.GET("/ws", getAllWaste)
+	}
+
+	admin := r.Group("/api")
+	{
+		admin.GET("/waste", fetchSingleWaste)
+	}
+
 	return r
 }
-

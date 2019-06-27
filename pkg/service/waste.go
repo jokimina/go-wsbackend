@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/base64"
-	"flag"
 	"go-wsbackend/pkg/common"
 	"go-wsbackend/pkg/crypto"
 	"io/ioutil"
@@ -10,7 +9,6 @@ import (
 )
 
 func GetEncData(dataFile string) (encData []byte) {
-	flag.Parse()
 	jsonFile, err := os.Open(dataFile)
 	defer jsonFile.Close()
 	if err != nil {
