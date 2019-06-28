@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"go-wsbackend/pkg/common"
+	"go-wsbackend/pkg/service"
 	"time"
 )
 
@@ -16,6 +17,7 @@ var (
 
 func Init(c *common.Config) *gin.Engine {
 	cf = c
+	service.Init(cf)
 	db = cf.DB
 	r := gin.New()
 	r.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
@@ -39,9 +41,11 @@ func Init(c *common.Config) *gin.Engine {
 		v1.GET("/ws", getAllWaste)
 	}
 
-	admin := r.Group("/api")
+	api := r.Group("/api")
 	{
-		admin.GET("/waste", fetchSingleWaste)
+		api.GET("/waste", fetchWaste)
+		api.POST("/waste", addWaste)
+		api.POST("/waste/:id", updateWaste)
 	}
 
 	return r

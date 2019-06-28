@@ -7,12 +7,51 @@ import (
 	"strings"
 )
 
+type WasteSorting int
+
+const (
+	// 有害垃圾
+	HazardousWaste = iota + 1
+	// 可回收
+	RecycleableWaste
+	// 湿垃圾
+	HouseholdWaste
+	// 干垃圾
+	ResidualWaste
+)
+
+var (
+	// 三方小程序数据
+	FromWeApp = "weapp"
+	// 官方数据
+	FromOfficial = "official"
+	// 用户
+	FromUser = "user"
+	// 管理员手动后台添加
+	FromAdmin = "admin"
+	// 用户自定义提交的
+	FromFeedback = "user"
+)
+
+type DataJson struct {
+	Version uint8       `json:"version"`
+	Data    []WasteItem `json:"data"`
+}
+
+// 垃圾信息主表
 type WasteItem struct {
 	gorm.Model
 	Name string `gorm:"type:varchar(100);unique_index;not null" json:"name"`
-	Qp   string `json:"qp"`
-	FL   string `json:"fl"`
-	Cats int64  `json:"cats"`
+	Qp   string `json:"qp"`   // 全拼
+	FL   string `json:"fl"`   // 首拼
+	Cats int64  `json:"cats"` // 分类
+	From string `json:"from"` // 数据来源
+}
+
+// 用户自己提交的记录
+type UserCommitRecord struct {
+	gorm.Model
+
 }
 
 func (m WasteItem) BulkInsert(db *gorm.DB, ws []WasteItem) error {

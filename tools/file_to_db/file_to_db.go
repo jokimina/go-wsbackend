@@ -8,6 +8,7 @@ import (
 	"go-wsbackend/pkg/common"
 	"go-wsbackend/pkg/database"
 	m "go-wsbackend/pkg/model"
+	"go-wsbackend/pkg/util"
 	"io/ioutil"
 	"os"
 	"path"
@@ -27,8 +28,19 @@ var (
 
 func init() {
 	flag.StringVar(&dataFile, "f", path.Join("../..", "data", "data.json"), "")
+	url := util.DefaultGetEnvString("DB_URL", "127.0.0.1")
+	username := util.DefaultGetEnvString("DB_USERNAME", "root")
+	password := util.DefaultGetEnvString("DB_PASSWORD", "")
+	dbName := util.DefaultGetEnvString("DB_NAME", "wsbackend")
 	conf = &common.Config{
 		DataFile: dataFile,
+		UseMysql: true,
+		Mysql: struct {
+			Url          string
+			Username     string
+			Password     string
+			DataBaseName string
+		}{Url: url, Username: username, Password: password, DataBaseName: dbName},
 	}
 	database.Init(conf)
 	db = conf.DB
@@ -62,6 +74,7 @@ func fileToDb() {
 		if sameItem.ID != 0 {
 			continue
 		}
+		data.From = m.FromOfficial
 		ds = append(ds, data)
 		fmt.Printf("Add item %s, cats: %d. \n", data.Name, data.Cats)
 	}
