@@ -1,0 +1,12 @@
+# docker-compose up -d --force-recreate
+version: "3.0"
+services:
+  wsbackend:
+    image: jokimina/wsbackend:2.1.0
+    restart: always
+    environment:
+      - DB_URL=${DB_URL}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - "127.0.0.1:8888:8080"
