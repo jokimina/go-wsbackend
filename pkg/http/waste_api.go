@@ -42,6 +42,7 @@ func addWaste(c *gin.Context) {
 	}
 	db.Where(&m.WasteItem{Name: waste.Name}).First(&rWaste)
 	if rWaste.ID == 0 {
+		waste.From = m.FromAdmin
 		db.Create(&waste)
 		c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:"saved"})
 	} else {
