@@ -2,10 +2,11 @@ package http
 
 import (
 	"fmt"
-	"github.com/jinzhu/gorm"
-	"go-wsbackend/pkg/pagination"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	m "go-wsbackend/pkg/model"
+	"go-wsbackend/pkg/pagination"
+	"go-wsbackend/pkg/service"
 	"net/http"
 	"strconv"
 )
@@ -62,5 +63,10 @@ func updateWaste(c *gin.Context) {
 		return
 	}
 	db.Save(&waste)
+	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:""})
+}
+
+func reloadWaste(c *gin.Context) {
+	service.LoadAllDbWaste()
 	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:""})
 }

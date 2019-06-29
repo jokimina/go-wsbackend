@@ -17,8 +17,10 @@ var (
 
 func Init(c *common.Config) *gin.Engine {
 	cf = c
-	service.Init(cf)
 	db = cf.DB
+
+	service.Init(cf)
+
 	r := gin.New()
 	r.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
@@ -44,6 +46,7 @@ func Init(c *common.Config) *gin.Engine {
 	api := r.Group("/api")
 	{
 		api.GET("/waste", fetchWaste)
+		api.GET("/waste/reload", reloadWaste)
 		api.POST("/waste", addWaste)
 		api.POST("/waste/:id", updateWaste)
 	}

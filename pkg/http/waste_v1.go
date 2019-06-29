@@ -7,6 +7,6 @@ import (
 )
 
 func getAllWaste(c *gin.Context) {
-	encData := service.GetEncData(cf.DataFile)
+	encData := service.GetEncData()
 	c.String(http.StatusOK, string(encData))
 }
