@@ -62,6 +62,7 @@ type WasteItem struct {
 	From   string `json:"-"` // 数据来源
 	FormID   string `json:"-"` // 小程序 form_id
 	OpenID   string `json:"-"` // 小程序 open_id
+	AppID   string `json:"-"` // 小程序 appid
 	Status string `gorm:"default:'online'" json:"status"'`
 }
 
@@ -77,6 +78,7 @@ type FeedbackBindObj struct {
 	Cats   int  `json:"cats"`
 	OpenID string `json:"open_id"`
 	FormID string `json:"form_id"`
+	AppID string `json:"appid"`
 }
 
 func (m WasteItem) BulkInsert(db *gorm.DB, ws []WasteItem) error {

@@ -3,15 +3,13 @@ module go-wsbackend
 go 1.12
 
 require (
-	github.com/biezhi/gorm-paginator/pagination v0.0.0-20190124091837-7a5c8ed20334
 	github.com/bradfitz/gomemcache v0.0.0-20190329173943-551aad21a668 // indirect
 	github.com/gin-gonic/gin v1.4.0
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
-	github.com/google/pprof v0.0.0-20190515194954-54271f7e092f // indirect
-	github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6 // indirect
 	github.com/jinzhu/gorm v1.9.8
+	github.com/kr/pretty v0.1.0 // indirect
 	github.com/mozillazg/go-pinyin v0.15.0
 	github.com/silenceper/wechat v1.0.1-0.20190522143304-894b1972d710
-	golang.org/x/arch v0.0.0-20190312162104-788fe5ffcd8c // indirect
-	golang.org/x/tools v0.0.0-20190606050223-4d9ae51c2468 // indirect
 )
+
+replace github.com/silenceper/wechat v1.0.1-0.20190522143304-894b1972d710 => github.com/jokimina/wechat v1.0.1-0.20190630160513-172728bcdb10

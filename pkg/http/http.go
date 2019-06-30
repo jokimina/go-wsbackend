@@ -5,8 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/silenceper/wechat"
-	"github.com/silenceper/wechat/miniprogram"
-	"github.com/silenceper/wechat/template"
 	"go-wsbackend/pkg/common"
 	"go-wsbackend/pkg/service"
 	"time"
@@ -15,18 +13,20 @@ import (
 var (
 	cf *common.Config
 	db *gorm.DB
+	apps map[string]*wechat.Wechat
 	wechatSrv *wechat.Wechat
-	tpl *template.Template
-	wxa *miniprogram.MiniProgram
+	//tpl *template.Template
+	//wxa *miniprogram.MiniProgram
 )
 
 
 func Init(c *common.Config) *gin.Engine {
+	apps = make(map[string]*wechat.Wechat)
 	cf = c
 	db = cf.DB
-	wechatSrv = wechat.NewWechat(&cf.Wechat)
-	tpl = wechatSrv.GetTemplate()
-	wxa = wechatSrv.GetMiniProgram()
+	for appId, wc := range cf.WechatApps {
+		apps[appId] = wechat.NewWechat(&wc)
+	}
 
 	service.Init(cf)
 

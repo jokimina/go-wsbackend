@@ -9,7 +9,7 @@ type Config struct {
 	DataFile string
 	DB	*gorm.DB
 	UseMysql bool
-	Wechat wechat.Config
+	WechatApps map[string]wechat.Config
 	Mysql struct{
 		Url string
 		Username string

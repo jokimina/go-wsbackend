@@ -21,6 +21,7 @@ func wechatValidate(c *gin.Context) {
 }
 
 func code2session(c *gin.Context) {
+	appID := c.DefaultQuery("appid", "")
 	code := c.DefaultQuery("code", "")
 	if code == "" {
 		c.JSON(http.StatusBadRequest, m.ErrResponse{
@@ -29,6 +30,7 @@ func code2session(c *gin.Context) {
 		})
 		return
 	}
+	wxa := apps[appID].GetMiniProgram()
 	r, err := wxa.Code2Session(code)
 	if err != nil {
 		log.Println(err.Error())
@@ -42,6 +44,7 @@ func code2session(c *gin.Context) {
 }
 
 func sendAuditTemplate(c *gin.Context) {
+	appID := c.DefaultQuery("appid", "")
 	openID := c.DefaultQuery("openid", "")
 	formID := c.DefaultQuery("formid", "")
 	if openID == "" {
@@ -64,6 +67,7 @@ func sendAuditTemplate(c *gin.Context) {
 			"keyword3": {Value: "xxx"},
 		},
 	}
+	tpl := apps[appID].GetTemplate()
 	msgId, err := tpl.Send(message, true)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, m.ErrResponse{
