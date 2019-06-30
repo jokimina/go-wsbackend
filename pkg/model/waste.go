@@ -12,13 +12,19 @@ type WasteSorting int
 const (
 	// 有害垃圾
 	HazardousWaste = iota + 1
-	// 可回收
+	// 可回收物
 	RecycleableWaste
 	// 湿垃圾
 	HouseholdWaste
 	// 干垃圾
 	ResidualWaste
 )
+
+var Wastes = []string{"有害垃圾","可回收物", "湿垃圾", "干垃圾"}
+
+func GetWasteNameByIndex(i int) string{
+	return Wastes[i - 1]
+}
 
 var (
 	// 三方小程序数据
@@ -29,8 +35,16 @@ var (
 	FromUser = "user"
 	// 管理员手动后台添加
 	FromAdmin = "admin"
-	// 用户自定义提交的
-	FromFeedback = "user"
+
+	// Status
+	// 显示到线上的版本
+	StatusOnline = "online"
+	// 下线
+	StatusOffline = "offline"
+	// 审核中
+	StatusPendding = "pending"
+	// 取消
+	StatusCancel = "cancel"
 )
 
 type DataJson struct {
@@ -41,17 +55,28 @@ type DataJson struct {
 // 垃圾信息主表
 type WasteItem struct {
 	gorm.Model
-	Name string `gorm:"type:varchar(100);unique_index;not null" json:"name"`
-	Qp   string `json:"qp"`   // 全拼
-	FL   string `json:"fl"`   // 首拼
-	Cats int64  `json:"cats"` // 分类
-	From string `json:"from"` // 数据来源
+	Name   string `gorm:"type:varchar(100);unique_index;not null" json:"name"`
+	Qp     string `json:"qp"`   // 全拼
+	FL     string `json:"fl"`   // 首拼
+	Cats   int  `json:"cats"` // 分类
+	From   string `json:"-"` // 数据来源
+	FormID   string `json:"-"` // 小程序 form_id
+	OpenID   string `json:"-"` // 小程序 open_id
+	Status string `gorm:"default:'online'" json:"status"'`
 }
 
-// 用户自己提交的记录
-type UserCommitRecord struct {
-	gorm.Model
+type WasteItemVo struct {
+	N string `json:"n"` //名称
+	Q string `json:"q"` // 全拼
+	F string `json:"f"` // 首拼
+	C string `json:"c"` // 分类
+}
 
+type FeedbackBindObj struct {
+	Name   string `json:"name"`
+	Cats   int  `json:"cats"`
+	OpenID string `json:"open_id"`
+	FormID string `json:"form_id"`
 }
 
 func (m WasteItem) BulkInsert(db *gorm.DB, ws []WasteItem) error {

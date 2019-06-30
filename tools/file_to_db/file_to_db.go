@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"time"
 )
 
 type WasteData struct {
@@ -75,6 +76,7 @@ func fileToDb() {
 			continue
 		}
 		data.From = m.FromOfficial
+		data.Status = m.StatusOnline
 		ds = append(ds, data)
 		fmt.Printf("Add item %s, cats: %d. \n", data.Name, data.Cats)
 	}
@@ -98,5 +100,6 @@ func fileToDb() {
 //fmt.Printf("Field Name: %s,\t Field Value: %v,\t Tag Value: %s\n", typeField.Name, valueField.Interface(), tag.Get("tag_name"))
 
 func main() {
-	fileToDb()
+	//fileToDb()
+	fmt.Println(time.Now().Format())
 }

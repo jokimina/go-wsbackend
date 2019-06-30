@@ -27,7 +27,7 @@ func Init(c *common.Config) {
 func LoadAllDbWaste() {
 	log.Println("--> load database data...")
 	if cf.UseMysql {
-		db.Find(&ws)
+		db.Where(&m.WasteItem{Status: m.StatusOnline}).Find(&ws)
 		dataJson.Version = 2
 		dataJson.Data = ws
 		b, err := json.Marshal(dataJson)
