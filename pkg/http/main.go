@@ -7,6 +7,10 @@ import (
 	"github.com/silenceper/wechat"
 	"go-wsbackend/pkg/common"
 	"go-wsbackend/pkg/service"
+	"go-wsbackend/pkg/util"
+	"io"
+	"os"
+	"path"
 	"time"
 )
 
@@ -15,6 +19,8 @@ var (
 	db *gorm.DB
 	apps map[string]*wechat.Wechat
 	wechatSrv *wechat.Wechat
+	logDir = path.Join("..", "logs")
+	logFile = path.Join(logDir, "wsbackend.log")
 	//tpl *template.Template
 	//wxa *miniprogram.MiniProgram
 )
@@ -31,6 +37,9 @@ func Init(c *common.Config) *gin.Engine {
 	service.Init(cf)
 
 	r := gin.New()
+	f := logFileInit()
+	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+
 	r.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
 			param.ClientIP,
@@ -67,4 +76,22 @@ func Init(c *common.Config) *gin.Engine {
 	}
 
 	return r
+}
+
+
+func logFileInit()(f *os.File){
+	exist, err := util.PathExists(logDir)
+	if err != nil {
+		panic(err)
+	}
+	if !exist {
+		if err = os.Mkdir(logDir, os.ModePerm); err != nil {
+			panic(err)
+		}
+	}
+	f, err = os.Create(logFile)
+	if err != nil {
+		panic(err)
+	}
+	return
 }
