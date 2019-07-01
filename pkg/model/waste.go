@@ -20,10 +20,10 @@ const (
 	ResidualWaste
 )
 
-var Wastes = []string{"有害垃圾","可回收物", "湿垃圾", "干垃圾"}
+var Wastes = []string{"有害垃圾", "可回收物", "湿垃圾", "干垃圾"}
 
-func GetWasteNameByIndex(i int) string{
-	return Wastes[i - 1]
+func GetWasteNameByIndex(i int) string {
+	return Wastes[i-1]
 }
 
 var (
@@ -47,9 +47,16 @@ var (
 	StatusCancel = "cancel"
 )
 
-type DataJson struct {
+type JsonData struct {
 	Version uint8       `json:"version"`
 	Data    []WasteItem `json:"data"`
+}
+
+type Json3Data struct {
+	Num1 []WasteItemVo `json:"1"`
+	Num2 []WasteItemVo `json:"2"`
+	Num3 []WasteItemVo `json:"3"`
+	Num4 []WasteItemVo `json:"4"`
 }
 
 // 垃圾信息主表
@@ -58,27 +65,27 @@ type WasteItem struct {
 	Name   string `gorm:"type:varchar(100);unique_index;not null" json:"name"`
 	Qp     string `json:"qp"`   // 全拼
 	FL     string `json:"fl"`   // 首拼
-	Cats   int  `json:"cats"` // 分类
-	From   string `json:"-"` // 数据来源
-	FormID   string `json:"-"` // 小程序 form_id
-	OpenID   string `json:"-"` // 小程序 open_id
-	AppID   string `json:"-"` // 小程序 appid
+	Cats   int    `json:"cats"` // 分类
+	From   string `json:"-"`    // 数据来源
+	FormID string `json:"-"`    // 小程序 form_id
+	OpenID string `json:"-"`    // 小程序 open_id
+	AppID  string `json:"-"`    // 小程序 appid
 	Status string `gorm:"default:'online'" json:"status"'`
 }
 
 type WasteItemVo struct {
 	N string `json:"n"` //名称
-	Q string `json:"q"` // 全拼
-	F string `json:"f"` // 首拼
+	A string `json:"a"` // 全拼
+	I string `json:"i"` // 首拼
 	C string `json:"c"` // 分类
 }
 
 type FeedbackBindObj struct {
 	Name   string `json:"name"`
-	Cats   int  `json:"cats"`
+	Cats   int    `json:"cats"`
 	OpenID string `json:"open_id"`
 	FormID string `json:"form_id"`
-	AppID string `json:"appid"`
+	AppID  string `json:"appid"`
 }
 
 func (m WasteItem) BulkInsert(db *gorm.DB, ws []WasteItem) error {

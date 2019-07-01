@@ -12,7 +12,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
-	"time"
+	"strconv"
+	"strings"
 )
 
 type WasteData struct {
@@ -49,7 +50,7 @@ func init() {
 	db.LogMode(true)
 }
 
-func fileToDb() {
+func fileToDbOfficial() {
 	jsonFile, err := os.Open(dataFile)
 	defer jsonFile.Close()
 	defer db.Close()
@@ -66,8 +67,8 @@ func fileToDb() {
 	for _, data := range wasteData.Data {
 		var sameItem m.WasteItem
 		//db.Where(m.WasteItem{Name: data.Name}).First(&item)
-		for _, dItem := range dbItems{
-			if data.Name == dItem.Name{
+		for _, dItem := range dbItems {
+			if data.Name == dItem.Name {
 				sameItem = dItem
 				break
 			}
@@ -97,9 +98,79 @@ func fileToDb() {
 
 }
 
-//fmt.Printf("Field Name: %s,\t Field Value: %v,\t Tag Value: %s\n", typeField.Name, valueField.Interface(), tag.Get("tag_name"))
+func fileToDb3Data() {
+	dataFile = path.Join("../..", "data", "3data.json")
+	jsonFile, err := os.Open(dataFile)
+	defer jsonFile.Close()
+	defer db.Close()
+	if err != nil {
+		panic(err)
+	}
+
+	var json3Data m.Json3Data
+	byteValue, _ := ioutil.ReadAll(jsonFile)
+	json.Unmarshal(byteValue, &json3Data)
+
+	var all3Data []m.WasteItemVo
+	all3Data = append(all3Data, json3Data.Num1...)
+	all3Data = append(all3Data, json3Data.Num2...)
+	all3Data = append(all3Data, json3Data.Num3...)
+	all3Data = append(all3Data, json3Data.Num4...)
+
+	var dbItems []m.WasteItem
+	db.Select("id, name, cats", ).Find(&dbItems)
+
+	// 不包含的结果
+	var ds []m.WasteItem
+	var dsNames []string
+	var catMapping = map[int]int{
+		4: 1,
+		3: 2,
+		2: 4,
+		1: 3,
+	}
+	for _, data := range all3Data {
+		var sameItem m.WasteItem
+		//db.Where(m.WasteItem{Name: data.Name}).First(&item)
+		for _, dItem := range dbItems {
+			if strings.ToLower(data.N) == strings.ToLower(dItem.Name) {
+				sameItem = dItem
+				break
+			}
+		}
+
+		if sameItem.ID != 0 || util.IndexOf(dsNames, data.N) != -1 {
+			continue
+		}
+		cats, _ := strconv.Atoi(data.C)
+		sameItem.Name = data.N
+		sameItem.Cats = catMapping[cats]
+		sameItem.From = m.FromWeApp
+		sameItem.Status = m.StatusOnline
+		qp, sp := util.GetPinYin(sameItem.Name)
+		sameItem.Qp = qp
+		sameItem.FL = sp
+		ds = append(ds, sameItem)
+		dsNames = append(dsNames, sameItem.Name)
+		fmt.Printf("Add item %s, cats: %d. len: %d\n", sameItem.Name, sameItem.Cats, len(ds))
+	}
+	if len(ds) > 0 {
+		ids := make([]interface{}, len(ds))
+		for i, v := range ds {
+			ids[i] = v
+		}
+		_, err = database.BatchInsert(db, ids)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("save version %v, count %d success \n", wasteData.Version, len(wasteData.Data))
+	} else {
+		fmt.Println("Nothing need add or update")
+	}
+	fmt.Println("Done.")
+}
 
 func main() {
-	//fileToDb()
-	fmt.Println(time.Now().Format())
+	//fileToDbOfficial()
+	fileToDb3Data()
 }

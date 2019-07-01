@@ -2,8 +2,8 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/silenceper/wechat/template"
 	m "go-wsbackend/pkg/model"
+	"go-wsbackend/pkg/service"
 	"log"
 	"net/http"
 )
@@ -56,19 +56,12 @@ func sendAuditTemplate(c *gin.Context) {
 	}
 	//r, err := wxa.Code2Session(code)
 
-	message := &template.Message{
-		ToUser:     openID,
-		TemplateID: "c3M4soqvdhNZQQU0zHEWV2UIuLDjplKXmXd9XlzV850",
-		FormID: formID,
-		//URL: "",
-		Data: map[string]*template.DataItem{
-			"keyword1": {Value: "x"},
-			"keyword2": {Value: "xx"},
-			"keyword3": {Value: "xxx"},
-		},
-	}
 	tpl := apps[appID].GetTemplate()
-	msgId, err := tpl.Send(message, true)
+	msgID, err := service.SendWechatTemplateMessage(tpl, &m.FeedbackBindObj{
+		AppID:  appID,
+		FormID: formID,
+		OpenID: openID,
+	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, m.ErrResponse{
 			Status:  http.StatusInternalServerError,
@@ -76,5 +69,5 @@ func sendAuditTemplate(c *gin.Context) {
 		})
 		return
 	}
-	c.String(http.StatusOK, string(msgId))
+	c.String(http.StatusOK, string(msgID))
 }
