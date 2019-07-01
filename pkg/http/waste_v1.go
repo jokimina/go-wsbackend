@@ -1,6 +1,8 @@
 package http
 
 import (
+	"crypto/md5"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	 m "go-wsbackend/pkg/model"
 	"go-wsbackend/pkg/service"
@@ -8,6 +10,11 @@ import (
 	"net/http"
 )
 
+func getWasteChecksum(c *gin.Context) {
+	encData := service.GetEncData()
+	checksum := fmt.Sprintf("%x", md5.Sum(encData))
+	c.String(http.StatusOK, checksum)
+}
 
 func getAllWaste(c *gin.Context) {
 	encData := service.GetEncData()

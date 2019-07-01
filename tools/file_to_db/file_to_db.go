@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/md5"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -172,5 +173,7 @@ func fileToDb3Data() {
 
 func main() {
 	//fileToDbOfficial()
-	fileToDb3Data()
+	//fileToDb3Data()
+	m := md5.Sum([]byte("xiaodong小东"))
+	fmt.Printf("%x\n", m)
 }

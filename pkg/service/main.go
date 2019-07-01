@@ -1,9 +1,11 @@
 package service
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"github.com/jinzhu/gorm"
 	"go-wsbackend/pkg/common"
+	"go-wsbackend/pkg/crypto"
 	m "go-wsbackend/pkg/model"
 	"io/ioutil"
 	"log"
@@ -14,8 +16,7 @@ var (
 	cf           *common.Config
 	db           *gorm.DB
 	allWasteData *[]byte
-	ws           []m.WasteItem
-	dataJson     m.DataJson
+	encData      []byte
 )
 
 func Init(c *common.Config) {
@@ -25,6 +26,10 @@ func Init(c *common.Config) {
 }
 
 func LoadAllDbWaste() {
+	var (
+		ws           []m.WasteItem
+		dataJson     m.JsonData
+	)
 	log.Println("--> load database data...")
 	if cf.UseMysql {
 		db.Where(&m.WasteItem{Status: m.StatusOnline}).Find(&ws)
@@ -44,4 +49,7 @@ func LoadAllDbWaste() {
 		b, _ := ioutil.ReadAll(jsonFile)
 		allWasteData = &b
 	}
+	outs, _ := crypto.DesEncrypt(*allWasteData, common.Key)
+	encData = make([]byte, base64.StdEncoding.EncodedLen(len(outs)))
+	base64.StdEncoding.Encode(encData, outs)
 }
