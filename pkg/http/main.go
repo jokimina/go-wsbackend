@@ -31,7 +31,7 @@ func Init(c *common.Config) *gin.Engine {
 	cf = c
 	db = cf.DB
 	for appId, wc := range cf.WechatApps {
-		apps[appId] = wechat.NewWechat(&wc)
+		apps[appId] = wechat.NewWechat(&wc.Config)
 	}
 
 	service.Init(cf)

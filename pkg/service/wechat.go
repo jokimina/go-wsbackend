@@ -5,12 +5,13 @@ import (
 	"github.com/silenceper/wechat/template"
 	"go-wsbackend/pkg/model"
 	"go-wsbackend/pkg/util"
+	"log"
 )
 
 func SendWechatTemplateMessage(tpl *template.Template, bindObj *model.FeedbackBindObj)(msgID int64, err error) {
 	message := &template.Message{
 		ToUser:     bindObj.OpenID,
-		TemplateID: "c3M4soqvdhNZQQU0zHEWV2UIuLDjplKXmXd9XlzV850",
+		TemplateID: bindObj.TemplateID,
 		FormID: bindObj.FormID,
 		URL: "https://www.baidu.com",
 		Page: fmt.Sprintf("pages/search/search?inputVal=%s", bindObj.Name),
@@ -22,5 +23,8 @@ func SendWechatTemplateMessage(tpl *template.Template, bindObj *model.FeedbackBi
 		},
 	}
 	msgID, err = tpl.Send(message, true)
+	if err != nil {
+		log.Printf("send failed ,\n%s", err.Error())
+	}
 	return
 }

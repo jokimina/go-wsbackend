@@ -7,6 +7,7 @@ import (
 	m "go-wsbackend/pkg/model"
 	"go-wsbackend/pkg/pagination"
 	"go-wsbackend/pkg/service"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -99,6 +100,23 @@ func auditWaste(c *gin.Context) {
 	waste.Status = json.Status
 	waste.Cats = json.Cats
 	db.Save(&waste)
+	if waste.FormID != "" {
+		log.Printf("send notify to [%s]. status: %s", waste.OpenID, json.Status)
+		var bindObj = &m.FeedbackBindObj{
+			Name: waste.Name,
+			Cats: waste.Cats,
+			OpenID: waste.OpenID,
+			FormID: waste.FormID,
+			AppID: waste.AppID,
+		}
+		tpl := apps[waste.AppID].GetTemplate()
+		if json.Status == m.StatusOnline {
+			bindObj.TemplateID = cf.WechatApps[waste.AppID].Template.Pass
+		} else if json.Status == m.StatusDeny{
+			bindObj.TemplateID = cf.WechatApps[waste.AppID].Template.Deny
+		}
+		service.SendWechatTemplateMessage(tpl, bindObj)
+	}
 	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:""})
 }
 
@@ -122,6 +140,24 @@ func auditBatchWaste(c *gin.Context) {
 		waste.Status = item.Status
 		waste.Cats = item.Cats
 		db.Save(&waste)
+
+		if waste.FormID != "" {
+			log.Printf("send notify to [%s]. status: %s", waste.OpenID, item.Status)
+			var bindObj = &m.FeedbackBindObj{
+				Name: waste.Name,
+				Cats: waste.Cats,
+				OpenID: waste.OpenID,
+				FormID: waste.FormID,
+				AppID: waste.AppID,
+			}
+			tpl := apps[waste.AppID].GetTemplate()
+			if item.Status == m.StatusOnline {
+				bindObj.TemplateID = cf.WechatApps[waste.AppID].Template.Pass
+			} else if item.Status == m.StatusDeny{
+				bindObj.TemplateID = cf.WechatApps[waste.AppID].Template.Deny
+			}
+			service.SendWechatTemplateMessage(tpl, bindObj)
+		}
 	}
 	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:""})
 }

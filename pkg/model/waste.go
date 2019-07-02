@@ -86,6 +86,7 @@ type FeedbackBindObj struct {
 	OpenID string `json:"open_id"`
 	FormID string `json:"form_id"`
 	AppID  string `json:"appid"`
+	TemplateID string `json:"-"`
 }
 
 func (m WasteItem) BulkInsert(db *gorm.DB, ws []WasteItem) error {
