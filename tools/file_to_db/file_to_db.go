@@ -171,6 +171,15 @@ func fileToDb3Data() {
 }
 
 func main() {
-	fileToDbOfficial()
+	//fileToDbOfficial()
 	//fileToDb3Data()
+	type Test struct {
+		Name string
+		Test string
+	}
+
+	type Test2 struct {
+		Test
+	}
+
 }

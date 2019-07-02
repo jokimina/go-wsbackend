@@ -20,7 +20,7 @@ const (
 	ResidualWaste
 )
 
-var Wastes = []string{"有害垃圾", "可回收物", "湿垃圾", "干垃圾"}
+var Wastes = []string{"有害垃圾", "可回收物", "湿垃圾", "干垃圾", "不属于垃圾, 可能有害", "不属于垃圾, 可以回收"}
 
 func GetWasteNameByIndex(i int) string {
 	return Wastes[i-1]

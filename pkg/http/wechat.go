@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func wechatValidate(c *gin.Context) {
+func wechatPush(c *gin.Context) {
 	server := wechatSrv.GetServer(c.Request, c.Writer)
 	err := server.Serve()
 	if err != nil {

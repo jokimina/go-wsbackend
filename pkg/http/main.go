@@ -61,7 +61,7 @@ func Init(c *common.Config) *gin.Engine {
 		v1.GET("/ws", getAllWaste)
 		v1.GET("/ws/checksum", getWasteChecksum)
 		v1.POST("/ws/feedback", userFeedback)
-		v1.GET("/wechat/validate", wechatValidate)
+		v1.POST("/wechat/push", wechatPush)
 		v1.GET("/wechat/code2session", code2session)
 		v1.GET("/wechat/send/audit", sendAuditTemplate)
 	}

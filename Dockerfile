@@ -8,7 +8,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 WORKDIR /go/src/wsbackend
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /wsbackend /go/src/wsbackend/cmd
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=vendor -ldflags="-w -s" -o /wsbackend /go/src/wsbackend/cmd
 
 FROM alpine:3.7
 RUN apk add tzdata ca-certificates && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
