@@ -43,8 +43,8 @@ var (
 	StatusOffline = "offline"
 	// 审核中
 	StatusPendding = "pending"
-	// 取消
-	StatusCancel = "cancel"
+	// 拒绝
+	StatusDeny = "deny"
 )
 
 type JsonData struct {

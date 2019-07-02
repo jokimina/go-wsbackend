@@ -73,6 +73,7 @@ func Init(c *common.Config) *gin.Engine {
 		api.GET("/waste/reload", reloadWaste)
 		api.POST("/waste", addWaste)
 		api.POST("/waste/:id", updateWaste)
+		api.POST("/audit/waste", auditWaste)
 	}
 
 	return r

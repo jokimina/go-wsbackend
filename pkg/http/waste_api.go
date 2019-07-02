@@ -14,10 +14,11 @@ import (
 func fetchWaste(c *gin.Context) {
 	var waste []m.WasteItem
 	var cdb *gorm.DB
+	var status = c.DefaultQuery("status", m.StatusOnline)
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
 	name := c.DefaultQuery("name", "")
-	cdb = db.Where("name like ? and status = ?", fmt.Sprintf("%%%s%%", name), m.StatusOnline)
+	cdb = db.Where("name like ? and status = ?", fmt.Sprintf("%%%s%%", name), status)
 
 	paginator := pagination.Paging(&pagination.Param{
 		DB:      cdb,
@@ -70,5 +71,32 @@ func updateWaste(c *gin.Context) {
 
 func reloadWaste(c *gin.Context) {
 	service.LoadAllDbWaste()
+	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:""})
+}
+
+func auditWaste(c *gin.Context) {
+	type binJson struct{
+		ID int `json:"ID"`
+		Cats int `json: cats`
+		Status string `json: statuc`
+	}
+	var json binJson
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	var waste m.WasteItem
+	db.First(&waste, json.ID)
+	if waste.ID == 0 {
+		c.JSON(http.StatusNotFound, m.ErrResponse{Status: http.StatusNotFound, Message: "No waste found!"})
+		return
+	}
+	//if waste.Status != m.StatusOnline && waste.Status != m.StatusDeny {
+	//	c.JSON(http.StatusBadRequest, m.ErrResponse{Status: http.StatusBadRequest, Message: "param error!"})
+	//	return
+	//}
+	waste.Status = json.Status
+	waste.Cats = json.Cats
+	db.Save(&waste)
 	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:""})
 }
