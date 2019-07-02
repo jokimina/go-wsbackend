@@ -74,6 +74,7 @@ func Init(c *common.Config) *gin.Engine {
 		api.POST("/waste", addWaste)
 		api.POST("/waste/:id", updateWaste)
 		api.POST("/audit/waste", auditWaste)
+		api.POST("/audit/batch/waste", auditBatchWaste)
 	}
 
 	return r

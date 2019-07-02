@@ -11,6 +11,12 @@ import (
 	"strconv"
 )
 
+type auditReqJson struct{
+	ID int `json:"ID"`
+	Cats int `json: cats`
+	Status string `json: status`
+}
+
 func fetchWaste(c *gin.Context) {
 	var waste []m.WasteItem
 	var cdb *gorm.DB
@@ -75,12 +81,7 @@ func reloadWaste(c *gin.Context) {
 }
 
 func auditWaste(c *gin.Context) {
-	type binJson struct{
-		ID int `json:"ID"`
-		Cats int `json: cats`
-		Status string `json: status`
-	}
-	var json binJson
+	var json auditReqJson
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -98,5 +99,29 @@ func auditWaste(c *gin.Context) {
 	waste.Status = json.Status
 	waste.Cats = json.Cats
 	db.Save(&waste)
+	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:""})
+}
+
+func auditBatchWaste(c *gin.Context) {
+	var json []auditReqJson
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	for _, item := range json {
+		var waste m.WasteItem
+		db.First(&waste, item.ID)
+		if waste.ID == 0 {
+			c.JSON(http.StatusNotFound, m.ErrResponse{Status: http.StatusNotFound, Message: "No waste found!"})
+			return
+		}
+		if item.Status != m.StatusOnline && item.Status != m.StatusDeny {
+			c.JSON(http.StatusBadRequest, m.ErrResponse{Status: http.StatusBadRequest, Message: "param error!"})
+			return
+		}
+		waste.Status = item.Status
+		waste.Cats = item.Cats
+		db.Save(&waste)
+	}
 	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data:""})
 }
