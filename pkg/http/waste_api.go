@@ -78,7 +78,7 @@ func auditWaste(c *gin.Context) {
 	type binJson struct{
 		ID int `json:"ID"`
 		Cats int `json: cats`
-		Status string `json: statuc`
+		Status string `json: status`
 	}
 	var json binJson
 	if err := c.ShouldBindJSON(&json); err != nil {
@@ -91,10 +91,10 @@ func auditWaste(c *gin.Context) {
 		c.JSON(http.StatusNotFound, m.ErrResponse{Status: http.StatusNotFound, Message: "No waste found!"})
 		return
 	}
-	//if waste.Status != m.StatusOnline && waste.Status != m.StatusDeny {
-	//	c.JSON(http.StatusBadRequest, m.ErrResponse{Status: http.StatusBadRequest, Message: "param error!"})
-	//	return
-	//}
+	if json.Status != m.StatusOnline && json.Status != m.StatusDeny {
+		c.JSON(http.StatusBadRequest, m.ErrResponse{Status: http.StatusBadRequest, Message: "param error!"})
+		return
+	}
 	waste.Status = json.Status
 	waste.Cats = json.Cats
 	db.Save(&waste)
