@@ -48,8 +48,8 @@ var (
 )
 
 type JsonData struct {
-	Version uint8       `json:"version"`
-	Data    []WasteItem `json:"data"`
+	Version uint8         `json:"version"`
+	Data    []WasteItemVo `json:"data"`
 }
 
 type Json3Data struct {
@@ -66,7 +66,7 @@ type WasteItem struct {
 	Qp     string `json:"qp"`   // 全拼
 	FL     string `json:"fl"`   // 首拼
 	Cats   int    `json:"cats"` // 分类
-	From   string `json:"-"`    // 数据来源
+	From   string `json:"from"` // 数据来源
 	FormID string `json:"-"`    // 小程序 form_id
 	OpenID string `json:"-"`    // 小程序 open_id
 	AppID  string `json:"-"`    // 小程序 appid
@@ -74,18 +74,19 @@ type WasteItem struct {
 }
 
 type WasteItemVo struct {
-	N string `json:"n"` //名称
-	A string `json:"a"` // 全拼
-	I string `json:"i"` // 首拼
-	C string `json:"c"` // 分类
+	Name string `json:"name"` // 名称
+	Qp   string `json:"qp"`   // 全拼
+	FL   string `json:"fl"`   // 首拼
+	Cats int    `json:"cats"` // 分类
+	From string `json:"from"` // 数据来源
 }
 
 type FeedbackBindObj struct {
-	Name   string `json:"name"`
-	Cats   int    `json:"cats"`
-	OpenID string `json:"open_id"`
-	FormID string `json:"form_id"`
-	AppID  string `json:"appid"`
+	Name       string `json:"name"`
+	Cats       int    `json:"cats"`
+	OpenID     string `json:"open_id"`
+	FormID     string `json:"form_id"`
+	AppID      string `json:"appid"`
 	TemplateID string `json:"-"`
 }
 

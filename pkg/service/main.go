@@ -30,13 +30,23 @@ func LoadAllDbWaste() {
 	var (
 		ws           []m.WasteItem
 		dataJson     m.JsonData
+		wasteItemVoList []m.WasteItemVo
 	)
 	log.Println("--> load database data...")
 	if cf.UseMysql {
 		db.Where(&m.WasteItem{Status: m.StatusOnline}).Find(&ws)
-		wasteCount = uint16(len(ws))
+		for _, v := range ws {
+			wasteItemVoList = append(wasteItemVoList, m.WasteItemVo{
+				Name: v.Name,
+				Qp: v.Qp,
+				FL: v.FL,
+				Cats: v.Cats,
+				From: v.From,
+			})
+		}
+		wasteCount = uint16(len(wasteItemVoList))
 		dataJson.Version = 2
-		dataJson.Data = ws
+		dataJson.Data = wasteItemVoList
 		b, err := json.Marshal(dataJson)
 		if err != nil {
 			panic(err)
