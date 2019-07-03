@@ -59,6 +59,7 @@ func Init(c *common.Config) *gin.Engine {
 	v1 := r.Group("/v1")
 	{
 		v1.GET("/ws", getAllWaste)
+		v1.GET("/ws/count", getWasteCount)
 		v1.GET("/ws/checksum", getWasteChecksum)
 		v1.POST("/ws/feedback", userFeedback)
 		v1.POST("/wechat/push", wechatPush)

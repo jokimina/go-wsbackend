@@ -21,6 +21,10 @@ func getAllWaste(c *gin.Context) {
 	c.String(http.StatusOK, string(encData))
 }
 
+func getWasteCount(c *gin.Context) {
+	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data: service.GetWasteCount()})
+}
+
 func userFeedback(c *gin.Context) {
 	var ws m.WasteItem
 	var dbWs m.WasteItem

@@ -17,6 +17,7 @@ var (
 	db           *gorm.DB
 	allWasteData *[]byte
 	encData      []byte
+	wasteCount	uint16
 )
 
 func Init(c *common.Config) {
@@ -33,6 +34,7 @@ func LoadAllDbWaste() {
 	log.Println("--> load database data...")
 	if cf.UseMysql {
 		db.Where(&m.WasteItem{Status: m.StatusOnline}).Find(&ws)
+		wasteCount = uint16(len(ws))
 		dataJson.Version = 2
 		dataJson.Data = ws
 		b, err := json.Marshal(dataJson)
