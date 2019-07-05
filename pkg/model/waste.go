@@ -20,7 +20,7 @@ const (
 	ResidualWaste
 )
 
-var Wastes = []string{"有害垃圾", "可回收物", "湿垃圾", "干垃圾", "不属于垃圾, 可能有害", "不属于垃圾, 可以回收"}
+var Wastes = []string{"有害垃圾", "可回收物", "湿垃圾", "干垃圾", "不属于垃圾, 可能有害", "不属于垃圾, 可以回收", "不属于日常生活垃圾", "装修垃圾", "大件垃圾"}
 
 func GetWasteNameByIndex(i int) string {
 	return Wastes[i-1]
@@ -42,7 +42,7 @@ var (
 	// 下线
 	StatusOffline = "offline"
 	// 审核中
-	StatusPendding = "pending"
+	StatusPending = "pending"
 	// 拒绝
 	StatusDeny = "deny"
 )
@@ -52,11 +52,21 @@ type JsonData struct {
 	Data    []WasteItemVo `json:"data"`
 }
 
+type Waste3Vo struct {
+	N string `json:"n"` // 名称
+	C string `json:"c"` // 分类
+	A string `json:"a"` // 别名
+	I string `json:"i"` // 全拼
+}
+
 type Json3Data struct {
-	Num1 []WasteItemVo `json:"1"`
-	Num2 []WasteItemVo `json:"2"`
-	Num3 []WasteItemVo `json:"3"`
-	Num4 []WasteItemVo `json:"4"`
+	Num1 []Waste3Vo `json:"1"`
+	Num2 []Waste3Vo `json:"2"`
+	Num3 []Waste3Vo `json:"3"`
+	Num4 []Waste3Vo `json:"4"`
+	Num5 []Waste3Vo `json:"5"`
+	Num6 []Waste3Vo `json:"6"`
+	Num7 []Waste3Vo `json:"7"`
 }
 
 // 垃圾信息主表

@@ -65,6 +65,7 @@ func Init(c *common.Config) *gin.Engine {
 		v1.POST("/wechat/push", wechatPush)
 		v1.GET("/wechat/code2session", code2session)
 		v1.GET("/wechat/send/audit", sendAuditTemplate)
+		v1.POST("/wechat/userinfo", saveUserInfo)
 	}
 
 	// 管理后台接口

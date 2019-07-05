@@ -18,5 +18,5 @@ func Init(cf *common.Config) {
 	//defer db.Close()
 	cf.DB = db
 
-	db.AutoMigrate(model.WasteItem{})
+	db.AutoMigrate(model.WasteItem{}, model.UserInfo{})
 }

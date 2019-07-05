@@ -43,7 +43,7 @@ func userFeedback(c *gin.Context) {
 	ws.FormID = feedbackBindObj.FormID
 	ws.AppID = feedbackBindObj.AppID
 	ws.OpenID = feedbackBindObj.OpenID
-	ws.Status = m.StatusPendding
+	ws.Status = m.StatusPending
 	ws.From = m.FromUser
 	ws.Qp = qp
 	ws.FL = sp

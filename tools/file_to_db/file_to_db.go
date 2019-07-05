@@ -109,13 +109,19 @@ func fileToDb3Data() {
 
 	var json3Data m.Json3Data
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	json.Unmarshal(byteValue, &json3Data)
+	err = json.Unmarshal(byteValue, &json3Data)
+	if err != nil {
+		panic(err)
+	}
 
-	var all3Data []m.WasteItemVo
+	var all3Data []m.Waste3Vo
 	all3Data = append(all3Data, json3Data.Num1...)
 	all3Data = append(all3Data, json3Data.Num2...)
 	all3Data = append(all3Data, json3Data.Num3...)
 	all3Data = append(all3Data, json3Data.Num4...)
+	all3Data = append(all3Data, json3Data.Num5...)
+	all3Data = append(all3Data, json3Data.Num6...)
+	all3Data = append(all3Data, json3Data.Num7...)
 
 	var dbItems []m.WasteItem
 	db.Select("id, name, cats", ).Find(&dbItems)
@@ -124,6 +130,9 @@ func fileToDb3Data() {
 	var ds []m.WasteItem
 	var dsNames []string
 	var catMapping = map[int]int{
+		7: 9,
+		6: 8,
+		5: 7,
 		4: 1,
 		3: 2,
 		2: 4,
@@ -133,7 +142,7 @@ func fileToDb3Data() {
 		var sameItem m.WasteItem
 		//db.Where(m.WasteItem{Name: data.Name}).First(&item)
 		for _, dItem := range dbItems {
-			if strings.ToLower(data.N) == strings.ToLower(dItem.Name) {
+			if data.N != "" && strings.ToLower(data.N) == strings.ToLower(dItem.Name) {
 				sameItem = dItem
 				break
 			}
@@ -172,14 +181,5 @@ func fileToDb3Data() {
 
 func main() {
 	//fileToDbOfficial()
-	//fileToDb3Data()
-	type Test struct {
-		Name string
-		Test string
-	}
-
-	type Test2 struct {
-		Test
-	}
-
+	fileToDb3Data()
 }

@@ -71,3 +71,18 @@ func sendAuditTemplate(c *gin.Context) {
 	}
 	c.String(http.StatusOK, string(msgID))
 }
+
+func saveUserInfo(c *gin.Context) {
+	var json m.BaseUserInfo
+	var userInfo m.UserInfo
+	if err := c.ShouldBindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, m.ErrResponse{Status:http.StatusBadRequest, Message: err.Error()})
+		return
+	}
+	userInfo.BaseUserInfo = json
+	if err := db.Save(&userInfo).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, m.ErrResponse{Status: http.StatusInternalServerError, Message: err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, m.Response{Status: http.StatusOK})
+}
