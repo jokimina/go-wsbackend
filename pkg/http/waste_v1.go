@@ -21,6 +21,21 @@ func getAllWaste(c *gin.Context) {
 	c.String(http.StatusOK, string(encData))
 }
 
+func searchWaste(c *gin.Context) {
+	s:= c.Param("s")
+	if s == "" {
+		c.JSON(http.StatusBadRequest, m.ErrResponse{Status: http.StatusBadRequest, Message: "param error!"})
+		return
+	}
+	searchResult := service.Search(s)
+	// 限制返回数量 防止拖库
+	if len(searchResult) > 100 {
+		c.JSON(http.StatusInternalServerError, m.ErrResponse{Status: http.StatusInternalServerError, Message: "result too long!"})
+		return
+	}
+	c.JSON(http.StatusOK, m.Response{Status: http.StatusOK, Data: searchResult})
+}
+
 func getWasteCount(c *gin.Context) {
 	c.JSON(http.StatusOK, m.Response{Status:http.StatusOK, Data: service.GetWasteCount()})
 }

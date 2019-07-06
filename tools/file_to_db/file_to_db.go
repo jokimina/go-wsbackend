@@ -1,11 +1,13 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"go-wsbackend/pkg/common"
+	"go-wsbackend/pkg/crypto"
 	"go-wsbackend/pkg/database"
 	m "go-wsbackend/pkg/model"
 	"go-wsbackend/pkg/util"
@@ -181,5 +183,14 @@ func fileToDb3Data() {
 
 func main() {
 	//fileToDbOfficial()
-	fileToDb3Data()
+	//fileToDb3Data()
+	src, err := base64.StdEncoding.DecodeString("wubGsFUs4NUjyi6J4PjL8A==")
+	if err != nil {
+		panic(err)
+	}
+	b, err := crypto.DesDecrypt(src, []byte("afenfena"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(b))
 }

@@ -91,6 +91,12 @@ type WasteItemVo struct {
 	From string `json:"from"` // 数据来源
 }
 
+type WasteShortVo struct {
+	Name string `json:"n"` // 名称
+	Cats int    `json:"c"` // 分类
+	From string `json:"f"` // 数据来源
+}
+
 type FeedbackBindObj struct {
 	Name       string `json:"name"`
 	Cats       int    `json:"cats"`

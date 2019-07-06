@@ -16,6 +16,7 @@ var (
 	cf           *common.Config
 	db           *gorm.DB
 	allWasteData *[]byte
+	wasteItemVoList []m.WasteItemVo
 	encData      []byte
 	wasteCount	uint16
 )
@@ -30,7 +31,6 @@ func LoadAllDbWaste() {
 	var (
 		ws           []m.WasteItem
 		dataJson     m.JsonData
-		wasteItemVoList []m.WasteItemVo
 	)
 	log.Println("--> load database data...")
 	if cf.UseMysql {

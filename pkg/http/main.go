@@ -54,12 +54,14 @@ func Init(c *common.Config) *gin.Engine {
 		)
 	}))
 	r.Use(gin.Recovery())
+	r.Use(decryptMiddleware())
 
 	// 提供小程序端访问接口
 	v1 := r.Group("/v1")
 	{
 		v1.GET("/ws", getAllWaste)
 		v1.GET("/ws/count", getWasteCount)
+		v1.GET("/ws/search", searchWaste)
 		v1.GET("/ws/checksum", getWasteChecksum)
 		v1.POST("/ws/feedback", userFeedback)
 		v1.POST("/wechat/push", wechatPush)
