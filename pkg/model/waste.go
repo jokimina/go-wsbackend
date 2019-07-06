@@ -97,6 +97,12 @@ type WasteShortVo struct {
 	From string `json:"f"` // 数据来源
 }
 
+type WasteSearchLog struct {
+	gorm.Model
+	S string  // 搜索关键字
+	C int  // 搜索次数
+}
+
 type FeedbackBindObj struct {
 	Name       string `json:"name"`
 	Cats       int    `json:"cats"`

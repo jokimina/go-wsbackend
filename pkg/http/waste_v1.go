@@ -4,7 +4,9 @@ import (
 	"crypto/md5"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	 m "go-wsbackend/pkg/model"
+	"github.com/jinzhu/gorm"
+	"go-wsbackend/pkg/database"
+	m "go-wsbackend/pkg/model"
 	"go-wsbackend/pkg/service"
 	"go-wsbackend/pkg/util"
 	"net/http"
@@ -27,6 +29,18 @@ func searchWaste(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, m.ErrResponse{Status: http.StatusBadRequest, Message: "param error!"})
 		return
 	}
+	go func(s string) {
+		var wsl m.WasteSearchLog
+		_ = database.Transact(db, func(tx *gorm.DB) error {
+			tx.Where("s = ?", s).First(&wsl)
+			if wsl.ID != 0 {
+				tx.Model(&wsl).Update(m.WasteSearchLog{S: s, C: wsl.C + 1})
+			} else {
+				tx.Save(m.WasteSearchLog{S: s, C: 1})
+			}
+			return nil
+		})
+	}(s)
 	searchResult := service.Search(s)
 	// 限制返回数量 防止拖库
 	if len(searchResult) > 100 {
