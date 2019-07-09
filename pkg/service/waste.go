@@ -13,15 +13,16 @@ func GetWasteCount() uint16 {
 	return wasteCount
 }
 
-func Search(s string) (searchResult []m.WasteShortVo) {
+func Search(s string) []m.WasteShortVo {
+	r := make([]m.WasteShortVo, 0)
 	for _, item := range wasteItemVoList {
 		if strings.Index(item.Name, s) > -1 || strings.Index(item.Qp, s) > -1 || strings.Index(item.FL, s) > -1 {
-			searchResult = append(searchResult, m.WasteShortVo{
+			r = append(r, m.WasteShortVo{
 				Name: item.Name,
 				Cats: item.Cats,
 				From: item.From,
 			})
 		}
 	}
-	return
+	return r
 }

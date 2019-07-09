@@ -34,9 +34,9 @@ func searchWaste(c *gin.Context) {
 		_ = database.Transact(db, func(tx *gorm.DB) error {
 			tx.Where("s = ?", s).First(&wsl)
 			if wsl.ID != 0 {
-				tx.Model(&wsl).Update(m.WasteSearchLog{S: s, C: wsl.C + 1})
+				tx.Model(&wsl).Update(&m.WasteSearchLog{S: s, C: wsl.C + 1})
 			} else {
-				tx.Save(m.WasteSearchLog{S: s, C: 1})
+				tx.Save(&m.WasteSearchLog{S: s, C: 1})
 			}
 			return nil
 		})

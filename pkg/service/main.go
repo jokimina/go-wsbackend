@@ -32,6 +32,7 @@ func LoadAllDbWaste() {
 		ws           []m.WasteItem
 		dataJson     m.JsonData
 	)
+	wasteItemVoList = make([]m.WasteItemVo, 0)
 	log.Println("--> load database data...")
 	if cf.UseMysql {
 		db.Where(&m.WasteItem{Status: m.StatusOnline}).Find(&ws)
