@@ -79,7 +79,22 @@ func _36krOverview() {
 	}
 }
 
+func _36krContent() {
+	var dbInfos []model.Information
+	db.Where("content = ?", "").Find(&dbInfos)
+	if len(dbInfos) > 0 {
+		for _, v := range dbInfos {
+			originID := v.OriginID
+			Json := _36kr.RunInformationContent(originID)
+			content := Json.ArticleDetail.ArticleDetailData.Data.Content
+			fmt.Println(content)
+			v.Content = content
+			db.Save(&v)
+		}
+	}
+}
+
 func main(){
 	_36krOverview()
-	//fmt.Println(util.IndexOf([]string{"aaa", "a"}, "a"))
+	_36krContent()
 }
