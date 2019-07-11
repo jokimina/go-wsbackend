@@ -9,7 +9,7 @@ import (
 func getInformationList(c *gin.Context) {
 	var infoList []m.InformationVo
 	var dbInfoList []m.Information
-	if err := db.Limit(20).Find(&dbInfoList).Error; err != nil {
+	if err := db.Order("updated_at desc").Find(&dbInfoList).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, m.ErrResponse{Status: http.StatusInternalServerError, Message: err.Error()})
 		return
 	}
