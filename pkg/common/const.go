@@ -1,3 +1,3 @@
 package common
 
-var Key = []byte("afenfena")
+var Key = []byte("x")
